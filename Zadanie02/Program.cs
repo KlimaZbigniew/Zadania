@@ -11,13 +11,108 @@ namespace Zadania
         static void Main(string[] args)
         {
 
+            char wybor;
+            
+            
             do
             {
                 Console.Clear();
-                Rezerwacja();
-                Console.WriteLine("ESC - Zakończ, inny klawisz ponowna kalkulacja.....");
-            } while (Console.ReadKey().Key != ConsoleKey.Escape);
+                Console.WriteLine("Wybierz zadanie");
+                Console.WriteLine("1. Kalkulator");
+                Console.WriteLine("2. System rezerwacji");
+                Console.WriteLine("\n ESC - wyjście");
 
+                wybor = Console.ReadKey().KeyChar;
+                switch (wybor)
+                {
+                    case '1' :
+                        Kalkulator();
+                        break;
+                    case  '2' :  
+                          Rezerwacja();
+                        break;
+                default:
+                        break;
+                }
+                                                
+            } while (wybor != (byte)ConsoleKey.Escape);
+
+        }
+
+        private static void Kalkulator()
+        {
+            double zmienna_1 = 0.00, zmienna_2= 0.00, wynik = 0.00;
+            string zmienna_1_str = "";
+            char dzialanie;
+
+            Console.Clear();
+            Console.WriteLine("Witam w kalkulatorze: ZK 1.0");
+
+            if (!Pobierz_z_konsoli("Podaj pierwszą liczbę: ", out zmienna_1))
+                return;
+
+            Console.Write("\nPodaj co robimy [+|-|/|*]: ");
+            do {
+                dzialanie = Console.ReadKey(true).KeyChar;
+            } while (!"+-/*".Contains(dzialanie));
+            
+            Console.WriteLine(dzialanie);
+
+            if (!Pobierz_z_konsoli("Podaj drugą liczbę: ", out zmienna_2))
+                return;
+
+            switch (dzialanie)
+            {
+                
+                case '+': wynik = zmienna_1 + zmienna_2; break;
+                case '-': wynik = zmienna_1 - zmienna_2; break;
+                case '*': wynik = zmienna_1 * zmienna_2; break;
+                case '/': wynik = (zmienna_2 != 0) ?  zmienna_1 / zmienna_2:  0; break;
+                default:
+                    break;
+            }
+
+            if (dzialanie == '/' && zmienna_2 == 0)
+                Console.WriteLine("!!! Nie dzielimy przez zero !!!");
+            else
+                Console.WriteLine("\n\nObliczyłem: {0} {1} {2} = {3}", zmienna_1, dzialanie, zmienna_2, wynik);
+
+            Console.WriteLine("Naciśnij dowolny klawisz aby zamknąć...");
+            Console.ReadKey();
+        }
+
+        private static bool Pobierz_z_konsoli(string opis, out double liczba)
+        {            
+            Char znak;
+            string liczba_str = "";
+            bool result;
+
+            Console.Write(opis);
+            liczba = 0;
+            
+            do
+            {
+                znak = Console.ReadKey(true).KeyChar;
+
+                if (znak == (char)ConsoleKey.Escape)
+                    return false;
+
+                if (znak == (Char)ConsoleKey.Enter &&  (liczba_str.Length) > 0)
+                    break;                                    
+
+                if ("1234567890.,".Contains(znak))
+                {
+                    liczba_str += znak;
+                    Console.Write(znak);
+                }
+                else
+                    Console.Beep();
+
+                        //Console.ReadKey().Key != ConsoleKey.Escape
+            } while (true);
+            
+            liczba = Convert.ToDouble(liczba_str.Replace(".", ","));
+            return true;            
         }
 
         private static void Rezerwacja()
@@ -33,7 +128,8 @@ namespace Zadania
             double wartosc = 0.00;
             double stawka = 0.00;
 
-            Console.WriteLine("System rezerwacji (ZK v.1.0)");
+            Console.Clear();
+            Console.WriteLine("                                System rezerwacji ZK v.1.0\n");
             Console.WriteLine("Osoby poniżej 18lat: {0}", cena_do_18);
             Console.WriteLine("Osoby dorosłe:\n  - jedna noc: {0}", cena_std);
             Console.WriteLine("  - dwie, trzy, cztery noce: {0}", cena_promo_01);
@@ -61,6 +157,10 @@ namespace Zadania
             wartosc = wiek >= 65 ? wartosc * ((100 - rabat_65) / 100) : wartosc;
 
             Console.WriteLine("Koszt rezerwacji: {0}\n\n    ZAPRASZAMY", wartosc);
+
+            Console.WriteLine("\n\nNaciśnij dowolny klawisz aby zamknąć...");
+            Console.ReadKey();
+
 
         }
     }
