@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Zadanie02;
 
 namespace Zadania
 {
@@ -20,6 +21,7 @@ namespace Zadania
                 Console.WriteLine("Wybierz zadanie");
                 Console.WriteLine("1. Kalkulator");
                 Console.WriteLine("2. System rezerwacji");
+                Console.WriteLine("4. Employee class");
                 Console.WriteLine("\n ESC - wyjście");
 
                 wybor = Console.ReadKey().KeyChar;
@@ -31,11 +33,54 @@ namespace Zadania
                     case  '2' :  
                           Rezerwacja();
                         break;
+                    case '4' :
+                        PracownikClass();
+                        break;
                 default:
                         break;
                 }
                                                 
             } while (wybor != (byte)ConsoleKey.Escape);
+
+        }
+
+        private static void PracownikClass()
+        {
+            string imie;
+            string nazwisko;
+            double stawka = 0.00;
+            double godziny = 0.00;
+
+            Console.Clear();
+            Console.WriteLine("System RCP ZK 1.0\n\n");
+
+            Console.Write("Podaj imię: ");
+            imie = Console.ReadLine();
+
+            Console.Write("Podaj nazwisko: ");
+            nazwisko = Console.ReadLine();
+
+            Pobierz_z_konsoli("Podaj stawkę: ", out stawka);
+
+            Employee pracownik = new Employee(imie, nazwisko, stawka);
+
+
+            Pobierz_z_konsoli("Podaj ilość godzin 1/3: ", out godziny);
+            pracownik.RegisterTime(godziny);
+            Pobierz_z_konsoli("Podaj ilość godzin 2/3: ", out godziny);
+            pracownik.RegisterTime(godziny);
+            Pobierz_z_konsoli("Podaj ilość godzin 3/3: ", out godziny);
+            pracownik.RegisterTime(godziny);
+
+            Console.WriteLine("\n\nWypłata: {0}", pracownik.PaySalary());
+
+            Pobierz_z_konsoli("Podaj ilość godzin 1/1: ", out godziny);
+            pracownik.RegisterTime(godziny);
+
+            Console.WriteLine("\n\nWypłata: {0}", pracownik.PaySalary());
+
+            Console.WriteLine("Naciśnij dowolny klawisz aby zamknąć...");
+            Console.ReadKey();
 
         }
 
