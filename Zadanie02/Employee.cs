@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace Zadanie02
 {
+   
+
     class Employee
     {
         string imie;

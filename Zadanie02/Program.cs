@@ -7,6 +7,12 @@ using Zadanie02;
 
 namespace Zadania
 {
+    class Pesel
+    {
+        public string pesel;
+        public DateTime data_ur;
+        public string plec;
+    }
     class Program
     {
         static void Main(string[] args)
@@ -22,6 +28,7 @@ namespace Zadania
                 Console.WriteLine("1. Kalkulator");
                 Console.WriteLine("2. System rezerwacji");
                 Console.WriteLine("4. Employee class");
+                Console.WriteLine("6. PESEL weryfikator");
                 Console.WriteLine("\n ESC - wyjście");
 
                 wybor = Console.ReadKey().KeyChar;
@@ -36,12 +43,101 @@ namespace Zadania
                     case '4' :
                         PracownikClass();
                         break;
+                    case '6':
+                        PESEL();
+                        break;
                 default:
                         break;
                 }
                                                 
             } while (wybor != (byte)ConsoleKey.Escape);
 
+        }
+
+        private static void PESEL()
+        {
+            string pesel;
+            Pesel pesel_obiekt;
+            Console.Clear();
+            Console.WriteLine("Kontrla PESEL ZK 1.0\n\n");
+
+            Console.Write("Podaj nr PESEL: ");
+            pesel = Console.ReadLine();
+
+            pesel_obiekt = Czy_pesel(pesel);
+            //obiekt zawierający informację o dacie urodzenia z PESELu oraz płeć, gdy PESEL jest poprawny
+
+            if (pesel_obiekt is null)
+            Console.WriteLine("PESEL jest nieprawidłowy.");
+            else
+            {
+                Console.WriteLine("PESEL jest prawidłowy: {0}", pesel_obiekt.pesel);
+                Console.WriteLine("Płeć: {0}", pesel_obiekt.plec);
+            }
+
+            Console.WriteLine("Naciśnij dowolny klawisz aby zamknąć...");
+            Console.ReadKey();
+
+        }
+
+        private static Pesel Czy_pesel( string pesel)
+        {
+            //Sparwdzamy PESEL ma 11 znaków.
+            if (pesel.Length != 11)
+                return null;
+
+            //Sparwdzamy czy każdy znak jest cyfrą.
+            for (int i = 0; i < 11; i++)
+            {
+                if (!"0123456789".Contains(pesel[i]))
+                    return null;
+            }
+
+            //Obliczamy cyfrę kontrolną
+            //Każdą pozycję numeru ewidencyjnego mnoży się przez odpowiednią wagę,
+            //są to kolejno: 1 3 7 9 1 3 7 9 1 3.
+            //Następnie utworzone iloczyny dodaje się i wynik dzieli się modulo 10.
+            //Wynik ten należy odjąć od 10 i znów podzielić przez modulo 10
+            //(to zabezpieczenie gdybyśmy w poprzednim kroku otrzymali 10).
+
+            int waga = 0;
+            int suma = 0;
+            int cyfra = 0;
+
+            for (int i = 0; i < 10; i++)
+            {
+                switch (i)
+                {
+                    case 0: waga = 1; break;
+                    case 1: waga = 3; break;
+                    case 2: waga = 7; break;
+                    case 3: waga = 9; break;
+                    case 4: waga = 1; break;
+                    case 5: waga = 3; break;
+                    case 6: waga = 7; break;
+                    case 7: waga = 9; break;
+                    case 8: waga = 1; break;
+                    case 9: waga = 3; break;
+                }
+
+                suma +=  waga * Int32.Parse(pesel[i].ToString());
+
+            }
+
+            cyfra = suma % 10;
+            cyfra = 10 - cyfra;
+            cyfra = cyfra % 10;
+
+            if (cyfra != Int32.Parse(pesel[10].ToString()))
+                return null;
+
+
+            Pesel pesel_obj = new Pesel();
+            pesel_obj.pesel = pesel;            
+            pesel_obj.plec = (Int32.Parse(pesel[9].ToString()) % 2 == 0) ? "K" : "M";
+            //pesel_obj.data_ur = TODO obliczyć datę uridzenia
+
+            return pesel_obj;
         }
 
         private static void PracownikClass()
