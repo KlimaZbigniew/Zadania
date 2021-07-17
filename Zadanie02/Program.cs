@@ -27,8 +27,11 @@ namespace Zadania
                 Console.WriteLine("Wybierz zadanie");
                 Console.WriteLine("1. Kalkulator");
                 Console.WriteLine("2. System rezerwacji");
+                Console.WriteLine("3. Test liczby pierwszej");
                 Console.WriteLine("4. Employee class");
+                Console.WriteLine("5. Zamiana liczb arabskich na rzymskie i odwrotnie");
                 Console.WriteLine("6. PESEL weryfikator");
+                Console.WriteLine("7. Wyznacz Wielkanoc");
                 Console.WriteLine("\n ESC - wyjście");
 
                 wybor = Console.ReadKey().KeyChar;
@@ -40,11 +43,20 @@ namespace Zadania
                     case  '2' :  
                           Rezerwacja();
                         break;
+                    case '3':
+                        Liczba_pierwsza();
+                        break;
                     case '4' :
                         PracownikClass();
                         break;
+                    case '5':
+                        Konwertyj_liczby();
+                        break;
                     case '6':
                         PESEL();
+                        break;                        
+                    case '7':
+                        Wielkanoc();
                         break;
                 default:
                         break;
@@ -52,6 +64,195 @@ namespace Zadania
                                                 
             } while (wybor != (byte)ConsoleKey.Escape);
 
+        }
+
+        private static void Konwertyj_liczby()
+        {
+            int n;
+            double liczba;
+            string liczba_rzymska;
+
+            Console.Clear();
+            Console.WriteLine("Konwertuj liczby: ZK 1.0");
+            Console.WriteLine();
+
+            if (!Pobierz_z_konsoli("Podaj liczbę arabską z zakresu 1-3999: ", out liczba))
+                return;
+            Console.WriteLine();
+            n = (int)liczba;
+            liczba_rzymska = ArabskieNaRzymskie(n);
+
+            Console.WriteLine("Odpowiednik rzymski: {0}", liczba_rzymska);
+            Console.Write("\nPodaj liczbę rzymską: ");
+
+            liczba_rzymska =  Console.ReadLine();
+
+            n = ArabskieNaRzymskie(liczba_rzymska);
+
+            Console.WriteLine("Odpowiednik arabski: {0}", n);
+            Console.WriteLine("Naciśnij dowolny klawisz aby zamknąć...");
+            Console.ReadKey();
+        }
+
+        private static int ArabskieNaRzymskie(string liczba_rzymska)
+        {
+            int n = 0;
+            int[] arabskie = { 1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1 };
+            String[] rzymskie = { "M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I" };
+
+            while (liczba_rzymska.Length > 0)
+            {
+                for (int i = 0; i < arabskie.Length -1; i++)
+                {
+                    while (liczba_rzymska.Substring(0, rzymskie[i].Length > liczba_rzymska.Length? 1:rzymskie[i].Length) == rzymskie[i])
+                    {
+                        n += arabskie[i];
+                        liczba_rzymska = liczba_rzymska.Substring(rzymskie[i].Length);
+                    }
+
+                }
+            }
+
+            return n;
+        }
+
+        private static string ArabskieNaRzymskie(int liczba)
+        {
+            string liczba_rzymska = "";
+            int kk = 0;
+            kk = liczba;
+            //TODO: tablica wielowymiarowa?? z różnych typów.
+            int[] arabskie = { 1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1 };
+            String[] rzymskie = { "M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I" };
+
+            if (liczba < 1 || liczba > 3999)
+            {
+                Console.WriteLine("Liczna jest z poza zakresu: 1-3999");
+                return "";
+            }
+
+
+            
+            
+                for (int i = 0; i < arabskie.Length - 1; i++)
+                {
+                    while (kk >= arabskie[i]) 
+                    {
+                        liczba_rzymska += rzymskie[i];
+                        kk -= arabskie[i];
+                    }
+                }
+
+            
+
+
+            return liczba_rzymska;
+        }
+
+        private static void Wielkanoc()
+        {
+            int rok;
+            double liczba;
+            DateTime data;
+
+            Console.Clear();
+            Console.WriteLine("wyznaczenie daty Wielkanocy: ZK 1.0");
+
+            if (!Pobierz_z_konsoli("Podaj rok: ", out liczba))
+                return;
+            Console.WriteLine();
+
+            rok = (int)liczba;
+
+            data = Podaj_Wielkanoc(rok);
+
+            Console.WriteLine("Data Wielkanocy to: {0}", data.ToString());
+            Console.WriteLine("Naciśnij dowolny klawisz aby zamknąć...");
+            Console.ReadKey();
+
+            
+        }
+
+        private static DateTime Podaj_Wielkanoc(int rok)
+        {
+            int a, b, c, d, e, f, g, h, i, k, l, m, p;
+            int dzien, miesiac;
+
+            //Dzielimy liczbę roku na 19 i wyznaczamy resztę a.
+            a = rok % 19;
+            //Dzielimy liczbę roku przez 100, wynik zaokrąglamy w dół(odcinamy część ułamkową) i otrzymujemy liczbę b.
+            b = (int)(rok / 100);
+            //Dzielimy liczbę roku przez 100 i otrzymujemy resztę c.
+            c = rok % 100;
+            //Liczymy: b: 4 i wynik zaokrąglamy w dół i otrzymujemy liczbę d.
+            d = (int)b / 4;
+            //Liczymy: b: 4 i wyznaczamy resztę e.
+            e = b % 4;
+            //Liczymy: (b + 8) : 25 i wynik zaokrąglamy w dół i otrzymujemy liczbę f.
+            f = (int)((b + 8) / 25);
+            //Liczymy: (b – f + 1) : 3 i wynik zaokrąglamy w dół i otrzymujemy liczbę g.
+            g = (b - f + 1) / 3;
+            //Liczymy: (19 × a + b – d – g + 15) : 30 i wyznaczamy resztę h.
+            h = (19 * a + b - d - g + 15) % 30;
+            ///Liczymy: c: 4 i wynik zaokrąglamy w dół i otrzymujemy cyfrę i.
+            i = (int)(c / 4);
+            //Liczymy: c: 4 i wyznaczamy resztę k.
+            k = c % 4;
+            //Liczymy: (32 + 2 × e + 2 × i – h – k) : 7 i otrzymujemy resztę l.
+            l = (32 + 2 * e + 2 * i - h - k) % 7;
+            //Liczymy: (a + 11 × h + 22 × l) : 451 i wynik zaokrąglamy w dół i otrzymujemy liczbę m.
+            m = (int)((a + 11 * h + 22 * l) / 451);
+            //Liczymy: (h + l – 7 × m + 114) : 31 i otrzymujemy resztę p.
+            dzien = (h + l - 7 * m + 114) % 31;
+            //Dzień Wielkanocy = p + 1.
+            dzien += 1;
+            //Miesiąc = Zaokrąglenie w dół dzielenia(h + l – 7 × m + 114) przez 31.
+            miesiac = (int)((h + l - 7 * m + 114) / 31);
+
+
+            return Convert.ToDateTime(rok.ToString() + "-" + miesiac.ToString() + "-" + dzien.ToString() );
+        }
+
+        private static void Liczba_pierwsza()
+        {
+            double liczba = 0.0;
+            Console.Clear();
+            Console.WriteLine("Witam w kalkulatorze: ZK 1.0");
+
+            if (!Pobierz_z_konsoli("Podaj liczbę do testów na liczbę pierwszą: ", out liczba))
+                return;
+            Console.WriteLine();
+
+            if (Czy_liczba_pierwsza(liczba))
+                Console.WriteLine("Liczba {0} jest liczbą pierwszą.", liczba);
+            else
+                Console.WriteLine("!!!! Liczba {0} nie jest liczbą pierwszą.", liczba);
+
+            Console.WriteLine("Naciśnij dowolny klawisz aby zamknąć...");
+            Console.ReadKey();
+        }
+
+        private static bool Czy_liczba_pierwsza(double liczba)
+        {
+            int l;
+            //liczba 2 jest liczbą pierwszą.
+            if (liczba == 2)
+                return true;
+
+            //liczby parzyste nie sią liczbami pierwszymi 
+            if (liczba % 2 == 0)
+                return false;
+
+            //Zawężamy przedział do spardzania 
+            l = (int)Math.Sqrt(liczba);
+            for (int k = 3; k < l; k++)
+            {
+                if (liczba % k == 0)
+                    return false;
+            }
+
+
+            return true;
         }
 
         private static void PESEL()
@@ -73,6 +274,7 @@ namespace Zadania
             {
                 Console.WriteLine("PESEL jest prawidłowy: {0}", pesel_obiekt.pesel);
                 Console.WriteLine("Płeć: {0}", pesel_obiekt.plec);
+                Console.WriteLine("Data urodzenia: {0} ", pesel_obiekt.data_ur);
             }
 
             Console.WriteLine("Naciśnij dowolny klawisz aby zamknąć...");
@@ -103,6 +305,8 @@ namespace Zadania
             int waga = 0;
             int suma = 0;
             int cyfra = 0;
+            int miesiac = 0;
+            int rok = 0;
 
             for (int i = 0; i < 10; i++)
             {
@@ -135,7 +339,29 @@ namespace Zadania
             Pesel pesel_obj = new Pesel();
             pesel_obj.pesel = pesel;            
             pesel_obj.plec = (Int32.Parse(pesel[9].ToString()) % 2 == 0) ? "K" : "M";
-            //pesel_obj.data_ur = TODO obliczyć datę uridzenia
+
+            miesiac = (int.Parse(pesel.Substring(2, 2)));
+
+            if (miesiac >= 80)
+            {
+                rok = 1800; miesiac -= 80;
+            }
+            else if (miesiac >= 60)
+            {
+                rok = 2200; miesiac -= 60;
+            }
+            else if (miesiac >= 40)
+            {
+                rok = 2100; miesiac -= 40;
+            }
+            else if (miesiac >= 20)
+            { 
+                rok = 2000; miesiac -= 20;
+            }
+            else
+                rok = 1900;
+
+            pesel_obj.data_ur = Convert.ToDateTime( (rok + int.Parse(pesel.Substring(0, 2))).ToString() + "-" + miesiac.ToString() + "-" + pesel.Substring(4,2));
 
             return pesel_obj;
         }
